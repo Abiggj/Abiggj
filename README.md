@@ -21,7 +21,7 @@ Re-dot is a unique application that blends the features of Reddit and Tinder to 
 ### Sudoku Solver
 A Python-based package for solving Sudoku puzzles, featuring a `solverr` class with methods for checking rows, columns, boxes, and possibilities to efficiently solve puzzles.
 
-#Currently I am working on
+## Currently I am working on
 ### Mental Health Chatbot
 This project involves creating a chatbot based on mental health books that functions as a virtual therapist. It suggests specific parts of the books to read, providing users with personalized guidance and support for their mental well-being.
 ### Business Analyst Preparation
