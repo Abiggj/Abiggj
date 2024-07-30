@@ -38,8 +38,8 @@ I am currently preparing for a role as a business analyst. This involves creatin
 
 Feel free to reach out to me through the following channels:
 
-- **Email:** [your-email@example.com](mailto:aniket.jhariya@gmail.com)
-- **LinkedIn:** [your-linkedin-profile](https://www.linkedin.com/in/aniket-jhariya)
+- **Email:** [aniket.jhariya@gmail.com](mailto:aniket.jhariya@gmail.com)
+- **LinkedIn:** [linkedin.com/in/aniket-jhariya](https://www.linkedin.com/in/aniket-jhariya)
 - **Phone Number:** +91 881-756-4165
 
 Thank you for visiting my GitHub profile! I am always open to collaborating on exciting projects and exploring new opportunities.
