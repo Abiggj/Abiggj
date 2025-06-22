@@ -97,7 +97,7 @@ const Home = () => {
 
       {/* Projects Section */}
       <section className="projects-preview">
-        <h3 className="section-title">Projects</h3>
+        <h3 className="section-title"> Professional Projects</h3>
         <div className="projects-grid">
           <div className="project-card">
             <div className="project-icon">

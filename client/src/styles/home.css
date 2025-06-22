@@ -1,6 +1,6 @@
 /* Home Page Styles */
 .home {
-  padding-top: 70px; /* Account for fixed navbar */
+  padding-top:1vh; /* Account for fixed navbar */
   min-height: 100vh;
 }
 
@@ -64,7 +64,7 @@
 
 .hero-subtitle {
   font-size: 1.8rem;
-  font-weight: 300;
+  font-weight: 450;
   margin-bottom: 1.5rem;
   opacity: 0.9;
 }
@@ -85,7 +85,9 @@
   margin-bottom: 2rem;
   opacity: 0.9;
   max-width: 500px;
+  color: white;
 }
+
 
 .hero-stats {
   display: flex;
@@ -131,7 +133,7 @@
 .hero-buttons {
   display: flex;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1vh;
 }
 
 .btn {
