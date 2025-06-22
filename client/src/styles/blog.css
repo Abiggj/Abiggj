@@ -1,0 +1,80 @@
+.blog-section{
+  padding: 4vh 2vw 0 2vw;
+  max-width: 98vw;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Centered content block (used in loading/error/no posts) */
+.centered-block {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+/* Header section */
+.blog-header {
+  margin-top: 4vh;
+  text-align: center;
+}
+
+.blog-header p {
+  color : grey;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Search and filter card */
+.filter-card {
+  margin-bottom: 2rem;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  min-width: 250px;
+}
+
+.select-category {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  background: white;
+}
+
+/* Grid layout */
+.grid.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* Post count text */
+.post-count {
+  margin-bottom: 2rem;
+  color: #666;
+}

@@ -5,10 +5,57 @@ import { VscAzure } from "react-icons/vsc";
 
 const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [typedText, setTypedText] = useState('');
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
   
+  const phrases = [
+    'DevOps Engineer',
+    'Software Developer',
+    'Cloud Practitioner',
+    'AI & ML Enthusiast',
+    'Site Reliability Engineer',
+    'Automation Engineer',
+    'Open Source Contributor',
+    'Tech Content Writer',
+    'Containerization Specialist',
+    'Golang Developer'
+  ];
+
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  useEffect(() => {
+    const typeSpeed = 65;
+    const deleteSpeed = 30;
+    const pauseTime = 2000;
+    const deleteDelay = 600;
+
+    const timeout = setTimeout(() => {
+      const currentPhrase = phrases[currentPhraseIndex];
+      
+      if (isDeleting) {
+        // Backspacing/deleting
+        setTypedText(currentPhrase.substring(0, typedText.length - 1));
+        
+        if (typedText === '') {
+          setIsDeleting(false);
+          setCurrentPhraseIndex((prev) => (prev + 1) % phrases.length);
+        }
+      } else {
+        // Typing
+        setTypedText(currentPhrase.substring(0, typedText.length + 1));
+        
+        if (typedText === currentPhrase) {
+          setTimeout(() => setIsDeleting(true), pauseTime);
+          return;
+        }
+      }
+    }, isDeleting ? deleteSpeed : typeSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [typedText, currentPhraseIndex, isDeleting, phrases]);
 
   const skills = [
     { icon: <SiAmazonwebservices />, name: 'AWS', color: '#FF9900' },
@@ -35,7 +82,7 @@ const Home = () => {
               Hi, I'm <span className="highlight">Aniket Jhariya</span>
             </h1>
             <h2 className="hero-subtitle">
-              <span className="typing-text">DevOps Engineer | Cloud & AI Enthusiast</span>
+              <span className="typing-text">{typedText}</span>
             </h2>
             <p className="hero-description">
               DevOps Intern at Diacto Technologies with hands-on experience in AWS, Docker, and CI/CD pipelines. 

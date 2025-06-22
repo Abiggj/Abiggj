@@ -15,7 +15,7 @@ const Navbar = () => {
       <div className="nav-container">
         <Link to="/" className="logo">
           <span className="logo-text">Aniket Jhariya</span>
-          <span className="logo-subtitle">Software Developer</span>
+          <span className="logo-subtitle">DevOps Engineer</span>
         </Link>
         
         <div className="hamburger" onClick={toggleMenu}>

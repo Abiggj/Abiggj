@@ -155,7 +155,7 @@ const Projects = () => {
 
       {/* Projects Grid */}
       <section className="projects-grid">
-        <div className="container">
+        <div className="project-container">
           {filteredProjects.map((project, index) => (
             <div 
               key={project.id} 

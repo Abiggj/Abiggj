@@ -1,6 +1,6 @@
 /* About Page Styles */
 .about-page {
-  padding-top: 70px;
+  padding-top: 1vh;
   min-height: 100vh;
 }
 
@@ -56,6 +56,7 @@
 .location {
   opacity: 0.8;
   font-size: 1rem;
+  color: #300953;
 }
 
 .profile-description {
