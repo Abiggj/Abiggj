@@ -126,7 +126,7 @@ const Home = () => {
       {/* Skills Section */}
       <section className="skills-section">
         <h3 className="section-title">Tech Stack</h3>
-        <div className="skills-grid">
+        <div className="skills-grid-home">
           {skills.map((skill, index) => (
             <div 
               key={skill.name} 

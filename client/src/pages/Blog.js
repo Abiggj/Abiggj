@@ -102,7 +102,7 @@ const Blog = () => {
   return (
     <div className="blog-section">
       <div className="blog-header">
-        <h1>DevOps Blog</h1>
+        <h1>My Personal Blog</h1>
         <p>
           Sharing insights, tutorials, and best practices from the world of DevOps, 
           cloud infrastructure, and automation.

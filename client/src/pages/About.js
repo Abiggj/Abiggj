@@ -89,7 +89,7 @@ const About = () => {
             <div className="profile-info">
               <h1>Aniket Jhariya</h1>
               <h2>DevOps Engineer</h2>
-              <p className="location">Pune, Maharashtra • aniket.jhariya@gmail.com • +91 881 7564 165</p>
+              <p className="location">• Pune, Maharashtra <br/>• aniket.jhariya@gmail.com <br/> • +91 881 7564 165</p>
             </div>
           </div>
           

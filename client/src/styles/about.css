@@ -54,9 +54,8 @@
 }
 
 .location {
-  opacity: 0.8;
-  font-size: 1rem;
-  color: #300953;
+  font-size: 1.1rem;
+  color: #323d72; 
 }
 
 .profile-description {
@@ -74,7 +73,7 @@
   font-size: 2rem;
   font-weight: 700;
   color: #333;
-  margin-bottom: 2rem;
+  margin-left: 5rem;
 }
 
 .section-icon {
@@ -346,6 +345,7 @@
 
 /* Publications Section */
 .publications-section {
+  max-width: 95vw;
   padding: 4rem 2rem;
   background: white;
 }
