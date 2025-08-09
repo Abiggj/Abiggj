@@ -17,7 +17,7 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post(process.env.REACT_APP_API, {
+      const response = await axios.post(`${process.env.REACT_APP_API}/login`, {
         username: formData.username,
         password: formData.password
       });
@@ -29,8 +29,8 @@ const Login = () => {
         // Set axios default header
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
         
-        // Force navigation with window.location for immediate redirect
-        window.location.href = '/admin';
+        // Navigate to the admin page
+        navigate('/admin');
       }
     } catch (error) {
       console.error('Login error:', error);
