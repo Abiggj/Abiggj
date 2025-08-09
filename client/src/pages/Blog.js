@@ -24,31 +24,32 @@ const Blog = () => {
       id: 2,
       title: "Kubernetes Best Practices: Security and Performance",
       content: "Kubernetes has become the de facto standard for container orchestration. However, with great power comes great responsibility. In this post, we'll explore essential security and performance best practices...",
-      category: "Kubernetes",
-      tags: ["Kubernetes", "Security", "Performance", "Best Practices"],
+      category: "kubernetes",
+      tags: ["kubernetes", "security", "performance", "best practices"],
       date: "2025-05-28",
-      author: "DevOps Engineer"
+      author: "devops engineer"
     },
     {
       id: 3,
-      title: "Infrastructure as Code with Terraform: Advanced Patterns",
-      content: "Terraform has revolutionized how we manage infrastructure. Moving beyond basic configurations, let's explore advanced patterns and best practices for large-scale infrastructure management...",
-      category: "Infrastructure",
-      tags: ["Terraform", "IaC", "AWS", "Infrastructure"],
+      title: "infrastructure as code with terraform: advanced patterns",
+      content: "terraform has revolutionized how we manage infrastructure. moving beyond basic configurations, let's explore advanced patterns and best practices for large-scale infrastructure management...",
+      category: "infrastructure",
+      tags: ["terraform", "iac", "aws", "infrastructure"],
       date: "2025-05-25",
-      author: "DevOps Engineer"
+      author: "devops engineer"
     },
     {
       id: 4,
-      title: "Monitoring Microservices: Prometheus and Grafana Setup",
-      content: "Monitoring microservices can be challenging due to their distributed nature. In this guide, we'll set up a comprehensive monitoring solution using Prometheus and Grafana...",
-      category: "Monitoring",
-      tags: ["Prometheus", "Grafana", "Monitoring", "Microservices"],
+      title: "monitoring microservices: prometheus and grafana setup",
+      content: "monitoring microservices can be challenging due to their distributed nature. in this guide, we'll set up a comprehensive monitoring solution using prometheus and grafana...",
+      category: "monitoring",
+      tags: ["prometheus", "grafana", "monitoring", "microservices"],
       date: "2025-05-22",
-      author: "DevOps Engineer"
+      author: "devops engineer"
     }
   ];
 
+  // Correct casing
   useEffect(() => {
     fetchPosts();
   }, []);
@@ -56,12 +57,14 @@ const Blog = () => {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/blog');
+      const response = await axios.get(`${process.env.REACT_APP_API}/api/blog`);
       setPosts(response.data.posts || response.data);
-      setLoading(false);
+      setError(null);
     } catch (err) {
       console.error('Error fetching posts:', err);
-      setPosts(mockPosts); // fallback
+      setError('Failed to load posts. Showing mock data.');
+      setPosts(mockPosts); // fallback data
+    } finally {
       setLoading(false);
     }
   };
@@ -69,12 +72,14 @@ const Blog = () => {
   const categories = ['all', ...new Set(mockPosts.map(post => post.category))];
 
   const filteredPosts = posts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
-    
+    const matchesSearch =
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const matchesCategory =
+      selectedCategory === 'all' || post.category === selectedCategory;
+
     return matchesSearch && matchesCategory;
   });
 

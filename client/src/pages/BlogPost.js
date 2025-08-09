@@ -25,7 +25,7 @@ const BlogPost = () => {
 const fetchPost = async () => {
   try {
     setLoading(true);
-    const response = await axios.get(`http://localhost:5000/api/blog/posts/${id}`);
+    const response = await axios.get(`${process.env.REACT_APP_API}/api/blog/posts/${id}`);
     setPost(response.data.post);
     console.log(response.data.post)
     setLoading(false); // ✅ done after successful fetch

@@ -28,7 +28,7 @@ const Admin = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/posts', {
+      const response = await axios.get(`${process.env.REACT_APP_API}/api/admin/posts`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -58,11 +58,11 @@ const handleSubmit = async (e) => {
     };
 
     if (editingPost) {
-      await axios.put(`http://localhost:5000/api/admin/posts/${editingPost._id}`, postData, {
+      await axios.put(`${process.env.REACT_APP_API}/api/admin/posts/${editingPost._id}`, postData, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
     } else {
-      await axios.post('http://localhost:5000/api/admin/posts', postData, {
+      await axios.post(`${process.env.REACT_APP_API}/api/admin/posts`, postData, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
     }
@@ -104,7 +104,7 @@ const handleSubmit = async (e) => {
   const handleDelete = async (postId) => {
     if (window.confirm('Are you sure you want to delete this post?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/admin/posts/${postId}`, {
+        await axios.delete(`${process.env.REACT_APP_API}/api/admin/posts/${postId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         fetchPosts();
