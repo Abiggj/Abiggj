@@ -57,7 +57,7 @@ const Blog = () => {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${process.env.REACT_APP_API}/api/blog`);
+      const response = await axios.get(`${process.env.REACT_APP_API}/api/blog/`);
       setPosts(response.data.posts || response.data);
       setError(null);
     } catch (err) {
