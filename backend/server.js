@@ -41,7 +41,10 @@ app.use('/api/', limiter);
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://abiggj.vercel.app'] 
+    ? [
+        'https://abiggj.vercel.app',
+        'https://abiggj-backend.vercel.app'
+      ]
     : ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true
 }));
