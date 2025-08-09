@@ -17,7 +17,7 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API}/login`, {
+      const response = await axios.post(`${process.env.REACT_APP_API}/auth/login`, {
         username: formData.username,
         password: formData.password
       });
