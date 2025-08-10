@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
 
-const Login = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
     username: '',
+    email: '',
     password: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,18 +18,19 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API}/api/auth/login/`, {
+      const response = await axios.post(`${process.env.REACT_APP_API}/api/auth/register/`, {
         username: formData.username,
+        email: formData.email,
         password: formData.password
       });
 
       if (response.data.success) {
-        login(response.data.user, response.data.token);
-        navigate('/admin');
+        // Navigate to the login page after successful registration
+        navigate('/login');
       }
     } catch (error) {
-      console.error('Login error:', error);
-      setError(error.response?.data?.message || 'Login failed. Please try again.');
+      console.error('Registration error:', error);
+      setError(error.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -39,7 +39,7 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-form">
-        <h2>Admin Login</h2>
+        <h2>Register</h2>
         {error && <div className="error-message">{error}</div>}
         
         <form onSubmit={handleSubmit}>
@@ -55,6 +55,17 @@ const Login = () => {
           </div>
 
           <div className="form-group">
+            <label>Email:</label>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              required
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div className="form-group">
             <label>Password:</label>
             <input
               type="password"
@@ -66,7 +77,7 @@ const Login = () => {
           </div>
 
           <button type="submit" disabled={loading} className="login-btn">
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Registering...' : 'Register'}
           </button>
         </form>
 
@@ -75,4 +86,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

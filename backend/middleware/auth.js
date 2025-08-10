@@ -11,10 +11,10 @@ const auth = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId).select('-password');
     if (!user || !user.isActive) {
-      return res.status(401).json({ message: 'Token is not valid' });
+      return res.status(41).json({ message: 'Token is not valid' });
     }
 
-    req.user = user;
+    req.user = { userId: user._id };
     next();
   } catch (error) {
     res.status(401).json({ message: 'Token is not valid' });

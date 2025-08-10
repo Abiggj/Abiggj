@@ -43,7 +43,7 @@ const register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      role: role || 'user'
+      role: role || 'editor'
     });
 
     await user.save();
@@ -81,7 +81,7 @@ const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Validation
+        // Validation
     if (!username || !password) {
       return res.status(400).json({
         success: false,
@@ -107,9 +107,8 @@ const login = async (req, res) => {
       });
     }
 
-    // Update last login
-    user.lastLogin = new Date();
-    await user.save();
+    // Update last login without triggering pre-save hook
+    await User.findByIdAndUpdate(user._id, { lastLogin: new Date() });
 
     // Generate token
     const token = generateToken(user._id);

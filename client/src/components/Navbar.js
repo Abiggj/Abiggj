@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaHome, FaUser, FaProjectDiagram, FaBlog, FaEnvelope, FaBars, FaTimes } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
+import Logout from './Logout';
 
 const Navbar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated, isAdmin } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -73,6 +76,45 @@ const Navbar = () => {
               <span>Contact</span>
             </Link>
           </li>
+          {isAuthenticated() ? (
+            <>
+              {isAdmin() && (
+                <li>
+                  <Link
+                    to="/admin"
+                    className={location.pathname === '/admin' ? 'active' : ''}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <span>Admin</span>
+                  </Link>
+                </li>
+              )}
+              <li>
+                <Logout />
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link
+                  to="/login"
+                  className={location.pathname === '/login' ? 'active' : ''}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span>Login</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/register"
+                  className={location.pathname === '/register' ? 'active' : ''}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span>Register</span>
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </nav>

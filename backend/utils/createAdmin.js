@@ -34,9 +34,6 @@ const createAdminUser = async () => {
     await adminUser.save();
 
     console.log('✅ Admin user created successfully');
-    console.log('📧 Email:', defaultAdmin.email);
-    console.log('🔑 Password:', defaultAdmin.password);
-    console.log('⚠️  Please change the default password after first login!');
 
   } catch (error) {
     console.error('❌ Error creating admin user:', error);

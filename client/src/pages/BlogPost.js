@@ -10,9 +10,7 @@ const BlogPost = () => {
   const [error, setError] = useState(null);
   const [relatedPosts, setRelatedPosts] = useState([]);
 
-  // Mock data for development (remove when backend is ready)
-  const mockPosts = {
-  };
+  
 
   const mockRelatedPosts = [
   ];
@@ -51,30 +49,6 @@ const fetchPost = async () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  const formatContent = (content) => {
-    // Simple markdown-like formatting
-    return content
-      .split('\n')
-      .map((line, index) => {
-        if (line.startsWith('# ')) {
-          return <h1 key={index} style={{ marginTop: '2rem', marginBottom: '1rem' }}>{line.substring(2)}</h1>;
-        }
-        if (line.startsWith('## ')) {
-          return <h2 key={index} style={{ marginTop: '2rem', marginBottom: '1rem' }}>{line.substring(3)}</h2>;
-        }
-        if (line.startsWith('### ')) {
-          return <h3 key={index} style={{ marginTop: '1.5rem', marginBottom: '0.5rem' }}>{line.substring(4)}</h3>;
-        }
-        if (line.startsWith('```')) {
-          return null; // Handle code blocks separately if needed
-        }
-        if (line.trim() === '') {
-          return <br key={index} />;
-        }
-        return <p key={index} style={{ marginBottom: '1rem' }}>{line}</p>;
-      });
-  };
-
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '4rem 0' }}>
@@ -86,7 +60,8 @@ const fetchPost = async () => {
           height: '50px',
           animation: 'spin 1s linear infinite',
           margin: '0 auto'
-        }}></div>
+        }}>
+        </div>
         <p style={{ marginTop: '1rem' }}>Loading post...</p>
       </div>
     );
@@ -156,8 +131,8 @@ const fetchPost = async () => {
             fontSize: '0.9rem',
             marginBottom: '1rem'
           }}>
-            <span>By {post.author}</span>
-            <span>{formatDate(post.date)}</span>
+            <span>By {post.author.username}</span>
+            <span>{formatDate(post.updatedAt)}</span>
             <span>{post.readTime}</span>
           </div>
           
@@ -180,12 +155,13 @@ const fetchPost = async () => {
         </div>
         
         {/* Post Content */}
-        <div style={{ 
-          lineHeight: '1.8',
-          fontSize: '1.1rem'
-        }}>
-          {formatContent(post.content)}
-        </div>
+        <div
+          style={{ 
+            lineHeight: '1.8',
+            fontSize: '1.1rem'
+          }}
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
       </article>
 
       {/* Related Posts */}

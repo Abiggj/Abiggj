@@ -172,18 +172,9 @@ const getPostById = async (req, res) => {
         message: 'Post not found'
       });
     }
-    console.log(post_obj);
     res.json({
       success: true,
-      post:{
-	title:post_obj.title,
-	content:post_obj.content,
-	excerpt:post_obj.excerpt,
-	category:post_obj.category,
-	tags:post_obj.tags,
-	date:post_obj.publishedAt,
-	author:post_obj.author.username
-	}
+      post: post_obj
     });
   } catch (error) {
     console.error('Get post by ID error:', error);
@@ -208,7 +199,7 @@ const createPost = async (req, res) => {
       seo,
       scheduledFor
     } = req.body;
-    
+
     // Validation
     if (!title || !content || !category) {
       return res.status(400).json({
@@ -216,7 +207,7 @@ const createPost = async (req, res) => {
         message: 'Title, content, and category are required'
       });
     }
-    
+
     // Check if user is authenticated
     if (!req.user) {
       return res.status(401).json({
@@ -224,15 +215,15 @@ const createPost = async (req, res) => {
         message: 'User authentication required'
       });
     }
-    
+
     // Sanitize HTML content
     const sanitizedContent = sanitizeHtml(content);
-    
+
     const postData = {
       title,
       content: sanitizedContent,
       category,
-      author: req.user._id,
+      author: req.user.userId,
       status: status || 'draft',
       ...(excerpt && { excerpt }),
       ...(tags && { tags }),
@@ -240,9 +231,9 @@ const createPost = async (req, res) => {
       ...(seo && { seo }),
       ...(scheduledFor && { scheduledFor: new Date(scheduledFor) })
     };
-    
+
     const post = new BlogPost(postData);
-    
+
     // Handle potential duplicate slug errors
     try {
       await post.save();
@@ -257,10 +248,10 @@ const createPost = async (req, res) => {
         throw saveError;
       }
     }
-    
+
     const populatedPost = await BlogPost.findById(post._id)
       .populate('author', 'username');
-    
+
     res.status(201).json({
       success: true,
       message: 'Post created successfully',

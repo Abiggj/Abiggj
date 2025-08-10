@@ -10,46 +10,21 @@ const Blog = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const mockPosts = [
-    {
-      id: 1,
-      title: "Setting Up a Complete CI/CD Pipeline with Jenkins and Docker",
-      content: "In this comprehensive guide, we'll walk through setting up a complete CI/CD pipeline using Jenkins and Docker. This setup will automate your deployment process and ensure consistent deployments across environments...",
-      category: "DevOps",
-      tags: ["Jenkins", "Docker", "CI/CD", "Automation"],
-      date: "2025-06-01",
-      author: "DevOps Engineer"
-    },
-    {
-      id: 2,
-      title: "Kubernetes Best Practices: Security and Performance",
-      content: "Kubernetes has become the de facto standard for container orchestration. However, with great power comes great responsibility. In this post, we'll explore essential security and performance best practices...",
-      category: "kubernetes",
-      tags: ["kubernetes", "security", "performance", "best practices"],
-      date: "2025-05-28",
-      author: "devops engineer"
-    },
-    {
-      id: 3,
-      title: "infrastructure as code with terraform: advanced patterns",
-      content: "terraform has revolutionized how we manage infrastructure. moving beyond basic configurations, let's explore advanced patterns and best practices for large-scale infrastructure management...",
-      category: "infrastructure",
-      tags: ["terraform", "iac", "aws", "infrastructure"],
-      date: "2025-05-25",
-      author: "devops engineer"
-    },
-    {
-      id: 4,
-      title: "monitoring microservices: prometheus and grafana setup",
-      content: "monitoring microservices can be challenging due to their distributed nature. in this guide, we'll set up a comprehensive monitoring solution using prometheus and grafana...",
-      category: "monitoring",
-      tags: ["prometheus", "grafana", "monitoring", "microservices"],
-      date: "2025-05-22",
-      author: "devops engineer"
-    }
+  const categories = [
+    'all',
+    'AWS',
+    'GCP',
+    'DevOps',
+    'GoLang',
+    'CI/CD',
+    'Python',
+    'DSA',
+    'SQL',
+    'Fun',
+    'AI/ML',
+    'New Technologies'
   ];
 
-  // Correct casing
   useEffect(() => {
     fetchPosts();
   }, []);
@@ -62,14 +37,11 @@ const Blog = () => {
       setError(null);
     } catch (err) {
       console.error('Error fetching posts:', err);
-      setError('Failed to load posts. Showing mock data.');
-      setPosts(mockPosts); // fallback data
+      setError('Failed to load posts.');
     } finally {
       setLoading(false);
     }
   };
-
-  const categories = ['all', ...new Set(mockPosts.map(post => post.category))];
 
   const filteredPosts = posts.filter(post => {
     const matchesSearch =

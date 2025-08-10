@@ -9,14 +9,27 @@ const Admin = () => {
     title: '',
     content: '',
     excerpt: '',
-    category: '',
+    category: 'AWS',
     tags: '',
-    author:'abiggj',
     status: 'draft',
     featuredImage: ''
   });
   const [editingPost, setEditingPost] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const categories = [
+    'AWS',
+    'GCP',
+    'DevOps',
+    'GoLang',
+    'CI/CD',
+    'Python',
+    'DSA',
+    'SQL',
+    'Fun',
+    'AI/ML',
+    'New Technologies'
+  ];
 
   useEffect(() => {
     if (token) {
@@ -53,7 +66,7 @@ const handleSubmit = async (e) => {
     const postData = {
       ...formData,
       slug,
-      author: formData.author || user?.username || 'anonymous',
+      author: user._id, // Send the user's ID
       tags: formData.tags.split(',').map(tag => tag.trim())
     };
 
@@ -71,9 +84,8 @@ const handleSubmit = async (e) => {
       title: '',
       content: '',
       excerpt: '',
-      category: '',
+      category: 'AWS',
       tags: '',
-      author: 'abiggj',
       status: 'draft',
       featuredImage: ''
     });
@@ -92,10 +104,9 @@ const handleSubmit = async (e) => {
       title: post.title,
       content: post.content,
       excerpt: post.excerpt || '',
-      category: post.category || '',
+      category: post.category || 'AWS',
       tags: (post.tags || []).join(', '),
       status: post.status,
-      author: post.author,
       featuredImage: post.featuredImage || ''
     });
     setEditingPost(post);
@@ -202,13 +213,15 @@ const handleSubmit = async (e) => {
 
             <div className="form-group">
               <label>Category:</label>
-              <input
-                type="text"
+              <select
                 value={formData.category}
                 onChange={(e) => setFormData({...formData, category: e.target.value})}
                 required
-                placeholder="Technology, Lifestyle, etc."
-              />
+              >
+                {categories.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
             </div>
 
             <div className="form-group">
@@ -305,7 +318,7 @@ const handleSubmit = async (e) => {
                       title: '',
                       content: '',
                       excerpt: '',
-                      category: '',
+                      category: 'AWS',
                       tags: '',
                       status: 'draft',
                       featuredImage: ''
