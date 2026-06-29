@@ -16,6 +16,7 @@ const Admin = () => {
   });
   const [editingPost, setEditingPost] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('manage');
 
   const categories = [
     'AWS',
@@ -90,6 +91,7 @@ const handleSubmit = async (e) => {
       featuredImage: ''
     });
     setEditingPost(null);
+    setActiveTab('manage');
     fetchPosts();
   } catch (error) {
     console.error('Create post error:', error);
@@ -110,6 +112,7 @@ const handleSubmit = async (e) => {
       featuredImage: post.featuredImage || ''
     });
     setEditingPost(post);
+    setActiveTab('create');
   };
 
   const handleDelete = async (postId) => {
@@ -180,181 +183,229 @@ const handleSubmit = async (e) => {
   return (
     <div className="admin-panel">
       <div className="admin-header">
-        <h1>Admin Panel</h1>
+        <h1>Admin Dashboard</h1>
         <div className="admin-user-info">
-          <span>Welcome, {user?.username}</span>
-          <button onClick={logout} className="logout-btn">Logout</button>
+          <span>Welcome, <strong>{user?.username}</strong></span>
         </div>
       </div>
+
+      <div className="admin-tabs">
+        <button 
+          className={`tab-btn ${activeTab === 'manage' ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('manage');
+            setEditingPost(null);
+            setFormData({
+              title: '',
+              content: '',
+              excerpt: '',
+              category: 'AWS',
+              tags: '',
+              status: 'draft',
+              featuredImage: ''
+            });
+          }}
+        >
+          📁 Manage Posts
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'create' ? 'active' : ''}`}
+          onClick={() => setActiveTab('create')}
+        >
+          {editingPost ? '✏️ Edit Post' : '➕ Create Post'}
+        </button>
+      </div>
       
-      <div className="admin-content">
-        <div className="admin-form">
-          <h2>{editingPost ? 'Edit Post' : 'Create New Post'}</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Title:</label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData({...formData, title: e.target.value})}
-                required
-              />
+      <div className="admin-content-single">
+        {activeTab === 'manage' ? (
+          <div className="posts-list">
+            <div className="posts-list-header">
+              <h2>Existing Posts</h2>
+              <span className="posts-count-badge">{posts.length} posts</span>
             </div>
-
-            <div className="form-group">
-              <label>Excerpt:</label>
-              <textarea
-                value={formData.excerpt}
-                onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
-                rows="3"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Category:</label>
-              <select
-                value={formData.category}
-                onChange={(e) => setFormData({...formData, category: e.target.value})}
-                required
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
+            {posts.length === 0 ? (
+              <p className="no-posts-msg">No posts found. Get started by writing a new one!</p>
+            ) : (
+              <div className="posts-grid-modern">
+                {posts.map(post => (
+                  <div key={post._id} className="post-card-modern">
+                    <div className="post-card-header">
+                      <span className={`status-badge ${post.status}`}>{post.status}</span>
+                      <span className="post-date-badge">{new Date(post.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <h3>{post.title}</h3>
+                    <p className="post-excerpt-preview">{post.excerpt}</p>
+                    <div className="post-card-footer">
+                      <span className="post-category-badge">{post.category}</span>
+                      <div className="post-card-actions">
+                        <button onClick={() => handleEdit(post)} className="edit-action-btn">Edit</button>
+                        <button onClick={() => handleDelete(post._id)} className="delete-action-btn">Delete</button>
+                      </div>
+                    </div>
+                  </div>
                 ))}
-              </select>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="admin-editor-layout">
+            {/* Left Column: Editor Inputs */}
+            <div className="editor-inputs-pane">
+              <h2>{editingPost ? 'Edit Post' : 'Create New Post'}</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label>Title:</label>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    required
+                    placeholder="e.g. Mastering Docker Containers"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Excerpt:</label>
+                  <textarea
+                    value={formData.excerpt}
+                    onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
+                    rows="2"
+                    required
+                    placeholder="Short description of the post..."
+                  />
+                </div>
+
+                <div className="form-group-row">
+                  <div className="form-group">
+                    <label>Category:</label>
+                    <select
+                      value={formData.category}
+                      onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      required
+                    >
+                      {categories.map(category => (
+                        <option key={category} value={category}>{category}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Status:</label>
+                    <select
+                      value={formData.status}
+                      onChange={(e) => setFormData({...formData, status: e.target.value})}
+                    >
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Content:</label>
+                  <div className="editor-toolbar">
+                    <button type="button" onClick={() => insertFormatting('bold')} title="Bold"><strong>B</strong></button>
+                    <button type="button" onClick={() => insertFormatting('italic')} title="Italic"><em>I</em></button>
+                    <button type="button" onClick={() => insertFormatting('h1')} title="Heading 1">H1</button>
+                    <button type="button" onClick={() => insertFormatting('h2')} title="Heading 2">H2</button>
+                    <button type="button" onClick={() => insertFormatting('h3')} title="Heading 3">H3</button>
+                    <button type="button" onClick={() => insertFormatting('p')} title="Paragraph">P</button>
+                    <button type="button" onClick={() => insertFormatting('link')} title="Link">🔗</button>
+                    <button type="button" onClick={() => insertFormatting('ul')} title="Bullet List">• List</button>
+                    <button type="button" onClick={() => insertFormatting('ol')} title="Numbered List">1. List</button>
+                  </div>
+                  <textarea
+                    id="content-editor"
+                    value={formData.content}
+                    onChange={(e) => setFormData({...formData, content: e.target.value})}
+                    rows="14"
+                    required
+                    placeholder="Enter blog post content. You can write HTML tags or format using the toolbar above."
+                    className="content-textarea"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Tags (comma-separated):</label>
+                  <input
+                    type="text"
+                    value={formData.tags}
+                    onChange={(e) => setFormData({...formData, tags: e.target.value})}
+                    placeholder="Docker, Containers, DevOps, Guide"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Featured Image URL:</label>
+                  <input
+                    type="url"
+                    value={formData.featuredImage}
+                    onChange={(e) => setFormData({...formData, featuredImage: e.target.value})}
+                    placeholder="https://images.unsplash.com/photo-..."
+                  />
+                </div>
+
+                <div className="form-actions">
+                  <button type="submit" className="submit-btn" disabled={loading}>
+                    {loading ? 'Saving...' : (editingPost ? 'Update Post' : 'Publish Post')}
+                  </button>
+                  <button 
+                    type="button" 
+                    className="cancel-btn"
+                    onClick={() => {
+                      setEditingPost(null);
+                      setFormData({
+                        title: '',
+                        content: '',
+                        excerpt: '',
+                        category: 'AWS',
+                        tags: '',
+                        status: 'draft',
+                        featuredImage: ''
+                      });
+                      setActiveTab('manage');
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
 
-            <div className="form-group">
-              <label>Content:</label>
-              <div className="editor-toolbar">
-                <button type="button" onClick={() => insertFormatting('bold')} title="Bold">
-                  <strong>B</strong>
-                </button>
-                <button type="button" onClick={() => insertFormatting('italic')} title="Italic">
-                  <em>I</em>
-                </button>
-                <button type="button" onClick={() => insertFormatting('h1')} title="Heading 1">
-                  H1
-                </button>
-                <button type="button" onClick={() => insertFormatting('h2')} title="Heading 2">
-                  H2
-                </button>
-                <button type="button" onClick={() => insertFormatting('h3')} title="Heading 3">
-                  H3
-                </button>
-                <button type="button" onClick={() => insertFormatting('p')} title="Paragraph">
-                  P
-                </button>
-                <button type="button" onClick={() => insertFormatting('link')} title="Link">
-                  🔗
-                </button>
-                <button type="button" onClick={() => insertFormatting('ul')} title="Bullet List">
-                  • List
-                </button>
-                <button type="button" onClick={() => insertFormatting('ol')} title="Numbered List">
-                  1. List
-                </button>
-              </div>
-              <textarea
-                id="content-editor"
-                value={formData.content}
-                onChange={(e) => setFormData({...formData, content: e.target.value})}
-                rows="15"
-                required
-                placeholder="Enter your blog post content here. You can use HTML tags or use the toolbar buttons above."
-                className="content-textarea"
-              />
-              <div className="editor-preview">
-                <strong>Preview:</strong>
+            {/* Right Column: Live Article Preview */}
+            <div className="editor-preview-pane">
+              <div className="modern-article-preview">
+                <div className="preview-meta">
+                  <span className="preview-category">{formData.category}</span>
+                  <span className={`status-badge ${formData.status}`}>{formData.status}</span>
+                </div>
+                
+                <h1 className="preview-title">{formData.title || 'Untitled Post'}</h1>
+                
+                {formData.featuredImage && (
+                  <img 
+                    src={formData.featuredImage} 
+                    alt="Featured Preview" 
+                    className="preview-featured-image" 
+                    onError={(e) => e.target.style.display = 'none'}
+                  />
+                )}
+                
+                {formData.excerpt && (
+                  <p className="preview-excerpt">{formData.excerpt}</p>
+                )}
+                
                 <div 
-                  className="preview-content" 
-                  dangerouslySetInnerHTML={{ __html: formData.content }}
+                  className="preview-body" 
+                  dangerouslySetInnerHTML={{ 
+                    __html: formData.content || '<em>Start typing in the editor to see your live preview...</em>' 
+                  }}
                 />
               </div>
             </div>
-
-            <div className="form-group">
-              <label>Tags (comma-separated):</label>
-              <input
-                type="text"
-                value={formData.tags}
-                onChange={(e) => setFormData({...formData, tags: e.target.value})}
-                placeholder="React, JavaScript, Web Development"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Featured Image URL:</label>
-              <input
-                type="url"
-                value={formData.featuredImage}
-                onChange={(e) => setFormData({...formData, featuredImage: e.target.value})}
-                placeholder="https://example.com/image.jpg"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Status:</label>
-              <select
-                value={formData.status}
-                onChange={(e) => setFormData({...formData, status: e.target.value})}
-              >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-                <option value="archived">Archived</option>
-              </select>
-            </div>
-
-            <div className="form-actions">
-              <button type="submit" disabled={loading}>
-                {loading ? 'Saving...' : (editingPost ? 'Update Post' : 'Create Post')}
-              </button>
-              {editingPost && (
-                <button 
-                  type="button" 
-                  onClick={() => {
-                    setEditingPost(null);
-                    setFormData({
-                      title: '',
-                      content: '',
-                      excerpt: '',
-                      category: 'AWS',
-                      tags: '',
-                      status: 'draft',
-                      featuredImage: ''
-                    });
-                  }}
-                >
-                  Cancel
-                </button>
-              )}
-            </div>
-          </form>
-        </div>
-
-        <div className="posts-list">
-          <h2>Existing Posts</h2>
-          {posts.length === 0 ? (
-            <p>No posts found.</p>
-          ) : (
-            <div className="posts-grid">
-              {posts.map(post => (
-                <div key={post._id} className="post-card">
-                  <h3>{post.title}</h3>
-                  <p className="post-summary">{post.excerpt}</p>
-                  <div className="post-meta">
-                    <span className={`status ${post.status}`}>{post.status}</span>
-                    <span className="date">{new Date(post.createdAt).toLocaleDateString()}</span>
-                  </div>
-                  <div className="post-actions">
-                    <button onClick={() => handleEdit(post)}>Edit</button>
-                    <button onClick={() => handleDelete(post._id)} className="delete-btn">Delete</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

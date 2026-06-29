@@ -11,8 +11,9 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
-import Register from './pages/Register';
 import Admin from './pages/Admin';
+import ScrollToTop from './components/ScrollToTop';
+import ScrollIndicator from './components/ScrollIndicator';
 import './styles/admin.css';
 import './styles/login.css';
 import './styles/navbar.css';
@@ -24,6 +25,8 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
+        <ScrollIndicator />
         <div className="App">
           <Navbar />
           <main className="main-content">
@@ -36,7 +39,6 @@ function App() {
                 <Route path="/blog/:id" element={<BlogPost />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
                 <Route 
                   path="/admin" 
                   element={

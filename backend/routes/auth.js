@@ -11,7 +11,9 @@ const {
 const { auth } = require('../middleware/auth');
 
 // Public routes
-router.post('/register', register);
+router.post('/register', (req, res) => {
+  res.status(403).json({ message: 'Registration is disabled on this portfolio website.' });
+});
 router.post('/login', login);
 
 // Protected routes (require authentication)

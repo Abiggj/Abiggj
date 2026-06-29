@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FaSearch } from 'react-icons/fa';
 import BlogCard from '../components/BlogCard';
 import '../styles/blog.css';
 
@@ -9,6 +10,7 @@ const Blog = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const categories = [
     'all',
@@ -86,23 +88,13 @@ const Blog = () => {
         </p>
       </div>
 
-      <div className="card filter-card">
-        <div className="filter-controls">
-          <div style={{ flex: '1' }}>
-            <input
-              type="text"
-              placeholder="Search posts..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
-          </div>
-
-          <div>
+      <div className="blog-toolbar">
+        <div className="filter-controls-modern">
+          <div className="category-select-wrapper">
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="select-category"
+              className="select-category-modern"
             >
               {categories.map(category => (
                 <option key={category} value={category}>
@@ -110,6 +102,32 @@ const Blog = () => {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className={`search-container-modern ${isSearchOpen || searchTerm !== '' ? 'active' : ''}`}>
+            {isSearchOpen || searchTerm !== '' ? (
+              <input
+                type="text"
+                placeholder="Type to search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input-modern"
+                autoFocus
+                onBlur={() => {
+                  if (searchTerm === '') {
+                    setIsSearchOpen(false);
+                  }
+                }}
+              />
+            ) : (
+              <button 
+                onClick={() => setIsSearchOpen(true)} 
+                className="search-toggle-btn-modern"
+                title="Search Posts"
+              >
+                <FaSearch />
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -125,7 +143,7 @@ const Blog = () => {
             Showing {filteredPosts.length} post{filteredPosts.length !== 1 ? 's' : ''}
           </div>
           
-          <div className="grid grid-2">
+          <div className="blog-posts-grid-modern">
             {filteredPosts.map(post => (
               <BlogCard key={post._id || post.id} post={post} />
             ))}

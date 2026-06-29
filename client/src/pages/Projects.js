@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { FaGithub, FaExternalLinkAlt, FaCode, FaRocket, FaBrain, FaChartLine, FaFileAlt, FaMobile } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaCode, FaRocket, FaBrain, FaChartLine, FaFileAlt, FaMobile, FaPaw } from 'react-icons/fa';
 import { SiPython, SiJavascript, SiGo, SiTensorflow, SiReact, SiOpencv, SiSelenium } from 'react-icons/si';
 
 const Projects = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [activeProject, setActiveProject] = useState(null);
 
   const projects = [
     {
@@ -96,6 +97,27 @@ const Projects = () => {
       color: '#f39c12',
       githubUrl: 'https://github.com/Abiggj/Re-dot',
       achievements: 'Unique UX innovation'
+    },
+    {
+      id: 5,
+      name: 'Pawwp',
+      category: 'Web/Mobile',
+      description: 'A social media platform for pets featuring a Go backend and a React Native mobile application.',
+      longDescription: 'A custom-built social media platform specifically tailored for pets and pet owners. Pawwp incorporates a Go backend leveraging MongoDB and Google Drive API for storage, and a React Native mobile application for smooth, native-app interaction. Core features include secure owner/pet profiling, posts and story timelines, and predictive AI/GAN integration.',
+      technologies: ['Go', 'MongoDB', 'React Native', 'JavaScript', 'Google Drive API', 'REST API', 'GAN'],
+      languages: { 'Go': 45.0, 'JavaScript': 55.0 },
+      features: [
+        'Secure multi-profile setup (pet owners & pets)',
+        'Go-based API backend (gorilla/mux & MongoDB)',
+        'Media upload integration with Google Drive API storage',
+        'Story and post timeline feeds for pets',
+        'Cross-platform mobile application built in React Native',
+        'Predictive GAN pipelines for automated content moderation'
+      ],
+      icon: <FaPaw />,
+      color: '#e74c3c',
+      githubUrl: 'https://github.com/Abiggj/pawwp',
+      achievements: 'Core features implemented'
     }
   ];
 
@@ -159,8 +181,9 @@ const Projects = () => {
           {filteredProjects.map((project, index) => (
             <div 
               key={project.id} 
-              className="project-card"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="project-card compact-project-card"
+              style={{ animationDelay: `${index * 0.1}s`, cursor: 'pointer' }}
+              onClick={() => setActiveProject(project)}
             >
               <div className="project-header">
                 <div className="project-icon" style={{ background: project.color }}>
@@ -169,16 +192,6 @@ const Projects = () => {
                 <div className="project-title">
                   <h3>{project.name}</h3>
                   <span className="project-category">{project.category}</span>
-                </div>
-                <div className="project-links">
-                  <a 
-                    href={project.githubUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="project-link github"
-                  >
-                    <FaGithub />
-                  </a>
                 </div>
               </div>
 
@@ -190,19 +203,70 @@ const Projects = () => {
                 </div>
               </div>
 
-              <div className="project-languages">
-                <h4>Languages</h4>
-                <div className="language-bars">
-                  {Object.entries(project.languages).map(([lang, percentage]) => (
+              <div className="project-footer">
+                <button 
+                  className="view-project-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveProject(project);
+                  }}
+                >
+                  <FaExternalLinkAlt />
+                  View Details & Stack
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Project Details Modal */}
+      {activeProject && (
+        <div className="modal-overlay" onClick={() => setActiveProject(null)}>
+          <div className="modal-content project-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setActiveProject(null)}>&times;</button>
+            
+            <div className="modal-header">
+              <div className="project-icon" style={{ background: activeProject.color, width: '50px', height: '50px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '1.3rem' }}>
+                {activeProject.icon}
+              </div>
+              <div style={{ marginLeft: '12px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.6rem', color: '#0f172a' }}>{activeProject.name}</h3>
+                <span className="project-category" style={{ background: '#3b82f6', color: '#fff', padding: '0.2rem 0.6rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 600, display: 'inline-block', marginTop: '4px' }}>
+                  {activeProject.category}
+                </span>
+              </div>
+            </div>
+            
+            <div className="modal-body">
+              <p style={{ color: '#475569', lineHeight: 1.6, fontSize: '1.05rem', marginBottom: '1.5rem' }}>
+                {activeProject.longDescription}
+              </p>
+              
+              <div className="modal-section">
+                <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.6rem' }}>Key Features</h4>
+                <ul style={{ paddingLeft: '1.2rem', margin: 0, color: '#475569', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  {activeProject.features.map((feature, i) => (
+                    <li key={i} style={{ fontSize: '0.95rem' }}>{feature}</li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div className="modal-section" style={{ marginTop: '1.5rem' }}>
+                <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.6rem' }}>Languages</h4>
+                <div className="language-bars" style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                  {Object.entries(activeProject.languages).map(([lang, percentage]) => (
                     <div key={lang} className="language-item">
-                      <div className="language-header">
-                        <span className="language-name">{lang}</span>
-                        <span className="language-percentage">{percentage}%</span>
+                      <div className="language-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.2rem', fontSize: '0.9rem' }}>
+                        <span className="language-name" style={{ fontWeight: 600, color: '#334155' }}>{lang}</span>
+                        <span className="language-percentage" style={{ color: '#64748b' }}>{percentage}%</span>
                       </div>
-                      <div className="language-bar">
+                      <div className="language-bar" style={{ width: '100%', height: '6px', background: '#e2e8f0', borderRadius: '3px', overflow: 'hidden' }}>
                         <div 
                           className="language-progress" 
                           style={{ 
+                            height: '100%',
+                            borderRadius: '3px',
                             width: `${percentage}%`,
                             background: getTechColor(lang)
                           }}
@@ -212,57 +276,49 @@ const Projects = () => {
                   ))}
                 </div>
               </div>
-
-              <div className="project-technologies">
-                <h4>Technologies</h4>
-                <div className="tech-stack">
-                  {project.technologies.slice(0, 6).map((tech, techIndex) => (
+              
+              <div className="modal-section" style={{ marginTop: '1.5rem' }}>
+                <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.6rem' }}>Technologies & Tools</h4>
+                <div className="tech-stack" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+                  {activeProject.technologies.map((tech, i) => (
                     <div 
-                      key={techIndex} 
-                      className="tech-item"
-                      style={{ color: getTechColor(tech) }}
+                      key={i} 
+                      className="tech-item" 
+                      style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '0.4rem', 
+                        background: '#f1f5f9', 
+                        padding: '0.4rem 0.8rem', 
+                        borderRadius: '12px', 
+                        fontSize: '0.85rem', 
+                        fontWeight: 500,
+                        color: getTechColor(tech),
+                        border: '1px solid #e2e8f0'
+                      }}
                     >
                       {getTechIcon(tech)}
                       <span>{tech}</span>
                     </div>
                   ))}
-                  {project.technologies.length > 6 && (
-                    <div className="tech-more">
-                      +{project.technologies.length - 6} more
-                    </div>
-                  )}
                 </div>
               </div>
-
-              <div className="project-features">
-                <h4>Key Features</h4>
-                <ul>
-                  {project.features.slice(0, 4).map((feature, featureIndex) => (
-                    <li key={featureIndex}>{feature}</li>
-                  ))}
-                  {project.features.length > 4 && (
-                    <li className="feature-more">
-                      +{project.features.length - 4} more features
-                    </li>
-                  )}
-                </ul>
-              </div>
-
-              <div className="project-footer">
-                <a 
-                  href={project.githubUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="view-project-btn"
-                >
-                  <FaExternalLinkAlt />
-                  View on GitHub
-                </a>
-              </div>
             </div>
-          ))}
+            
+            <div className="modal-footer" style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
+              <a 
+                href={activeProject.githubUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="view-project-btn"
+                style={{ width: 'auto', display: 'inline-flex', padding: '0.6rem 1.5rem', borderRadius: '10px' }}
+              >
+                <FaGithub /> View on GitHub
+              </a>
+            </div>
+          </div>
         </div>
-      </section>
+      )}
 
       {/* GitHub Profile Section */}
       <section className="github-section">

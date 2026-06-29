@@ -10,34 +10,28 @@ const BlogPost = () => {
   const [error, setError] = useState(null);
   const [relatedPosts, setRelatedPosts] = useState([]);
 
-  
-
-  const mockRelatedPosts = [
-  ];
+  const mockRelatedPosts = [];
 
   useEffect(() => {
     fetchPost();
     fetchRelatedPosts();
   }, [id]);
 
-const fetchPost = async () => {
-  try {
-    setLoading(true);
-    const response = await axios.get(`${process.env.REACT_APP_API}/api/blog/posts/${id}`);
-    setPost(response.data.post);
-    console.log(response.data.post)
-    setLoading(false); // ✅ done after successful fetch
-  } catch (err) {
-    setError('Failed to fetch blog post');
-    setLoading(false);
-    console.error('Error fetching post:', err);
-  }
-};
-
+  const fetchPost = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${process.env.REACT_APP_API}/api/blog/posts/${id}`);
+      setPost(response.data.post);
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to fetch blog post');
+      setLoading(false);
+      console.error('Error fetching post:', err);
+    }
+  };
 
   const fetchRelatedPosts = async () => {
     try {
-      // TODO: Replace with actual API call when backend is ready
       setRelatedPosts(mockRelatedPosts);
     } catch (err) {
       console.error('Error fetching related posts:', err);
@@ -51,17 +45,8 @@ const fetchPost = async () => {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '4rem 0' }}>
-        <div style={{
-          border: '4px solid #f3f3f3',
-          borderTop: '4px solid #3498db',
-          borderRadius: '50%',
-          width: '50px',
-          height: '50px',
-          animation: 'spin 1s linear infinite',
-          margin: '0 auto'
-        }}>
-        </div>
+      <div className="centered-block">
+        <div className="spinner"></div>
         <p style={{ marginTop: '1rem' }}>Loading post...</p>
       </div>
     );
@@ -69,15 +54,15 @@ const fetchPost = async () => {
 
   if (error) {
     return (
-      <div style={{ textAlign: 'center', padding: '4rem 0' }}>
+      <div className="centered-block">
         <h2 style={{ color: '#e74c3c' }}>Error</h2>
         <p>{error}</p>
-        <div style={{ marginTop: '2rem' }}>
-          <Link to="/blog" className="btn">Back to Blog</Link>
+        <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+          <Link to="/blog" className="cancel-btn" style={{ padding: '10px 20px', borderRadius: '8px', textDecoration: 'none' }}>Back to Blog</Link>
           <button 
             onClick={() => navigate(-1)}
-            className="btn btn-outline"
-            style={{ marginLeft: '1rem' }}
+            className="submit-btn"
+            style={{ padding: '10px 20px', borderRadius: '8px' }}
           >
             Go Back
           </button>
@@ -88,135 +73,98 @@ const fetchPost = async () => {
 
   if (!post) {
     return (
-      <div style={{ textAlign: 'center', padding: '4rem 0' }}>
+      <div className="centered-block">
         <h2>Post not found</h2>
-        <Link to="/blog" className="btn">Back to Blog</Link>
+        <Link to="/blog" className="cancel-btn" style={{ padding: '10px 20px', borderRadius: '8px', textDecoration: 'none', display: 'inline-block', marginTop: '1rem' }}>Back to Blog</Link>
       </div>
     );
   }
 
+  const imageUrl = post.featuredImage?.url || (typeof post.featuredImage === 'string' ? post.featuredImage : null);
+
   return (
-    <div>
+    <div className="blog-post-detail-container">
       {/* Breadcrumb */}
-      <nav style={{ marginBottom: '2rem', color: '#666' }}>
-        <Link to="/" style={{ color: '#3498db', textDecoration: 'none' }}>Home</Link>
-        {' > '}
-        <Link to="/blog" style={{ color: '#3498db', textDecoration: 'none' }}>Blog</Link>
-        {' > '}
-        <span>{post.title}</span>
+      <nav className="blog-breadcrumb">
+        <Link to="/">Home</Link>
+        <span className="separator">/</span>
+        <Link to="/blog">Blog</Link>
+        <span className="separator">/</span>
+        <span className="current">{post.title}</span>
       </nav>
 
-      {/* Post Header */}
-      <article className="card" style={{ marginBottom: '3rem' }}>
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{ marginBottom: '1rem' }}>
-            <span style={{
-              fontSize: '0.9rem',
-              color: '#666',
-              background: '#f8f9fa',
-              padding: '4px 8px',
-              borderRadius: '4px'
-            }}>
-              {post.category}
-            </span>
+      {/* Article Block */}
+      <article className="blog-article-card">
+        {imageUrl && (
+          <div className="blog-article-banner">
+            <img src={imageUrl} alt={post.featuredImage?.alt || post.title} onError={(e) => e.target.style.display = 'none'} />
           </div>
+        )}
+
+        <div className="blog-article-header">
+          <span className="blog-article-category">{post.category}</span>
+          <h1 className="blog-article-title">{post.title}</h1>
           
-          <h1 style={{ marginBottom: '1rem', fontSize: '2.5rem' }}>{post.title}</h1>
-          
-          <div style={{ 
-            display: 'flex', 
-            flexWrap: 'wrap',
-            gap: '2rem',
-            color: '#666',
-            fontSize: '0.9rem',
-            marginBottom: '1rem'
-          }}>
-            <span>By {post.author.username}</span>
-            <span>{formatDate(post.updatedAt)}</span>
-            <span>{post.readTime}</span>
+          <div className="blog-article-author-info">
+            <span className="author-name">By {post.author?.username || 'abiggj'}</span>
+            <span className="dot">•</span>
+            <span className="publish-date">{formatDate(post.createdAt || post.date)}</span>
+            {post.readTime && (
+              <>
+                <span className="dot">•</span>
+                <span className="read-time">{post.readTime}</span>
+              </>
+            )}
           </div>
-          
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-            {post.tags.map(tag => (
-              <span 
-                key={tag}
-                style={{
-                  fontSize: '0.8rem',
-                  background: '#e3f2fd',
-                  color: '#1976d2',
-                  padding: '4px 8px',
-                  borderRadius: '12px'
-                }}
-              >
-                #{tag}
-              </span>
+
+          <div className="blog-article-tags">
+            {post.tags && post.tags.map(tag => (
+              <span key={tag} className="blog-article-tag">#{tag}</span>
             ))}
           </div>
         </div>
-        
-        {/* Post Content */}
-        <div
-          style={{ 
-            lineHeight: '1.8',
-            fontSize: '1.1rem'
-          }}
+
+        {/* Content Body */}
+        <div 
+          className="blog-article-body"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>
 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
-        <div style={{ marginTop: '4rem' }}>
-          <h2 style={{ marginBottom: '2rem' }}>Related Posts</h2>
-          <div className="grid grid-2">
+        <div className="related-posts-section">
+          <h2>Related Posts</h2>
+          <div className="blog-posts-grid-modern">
             {relatedPosts.map(relatedPost => (
-              <div key={relatedPost.id} className="card">
-                <span style={{
-                  fontSize: '0.8rem',
-                  color: '#666',
-                  background: '#f8f9fa',
-                  padding: '2px 6px',
-                  borderRadius: '4px'
-                }}>
-                  {relatedPost.category}
-                </span>
-                <h3 style={{ margin: '1rem 0' }}>
-                  <Link 
-                    to={`/blog/${relatedPost.id}`}
-                    style={{ textDecoration: 'none', color: '#2c3e50' }}
-                  >
-                    {relatedPost.title}
+              <div key={relatedPost.id} className="blog-card-modern">
+                <div className="blog-card-content">
+                  <div className="blog-card-meta">
+                    <span className="blog-card-category">{relatedPost.category}</span>
+                  </div>
+                  <h3 className="blog-card-title">
+                    <Link to={`/blog/${relatedPost.id}`}>
+                      {relatedPost.title}
+                    </Link>
+                  </h3>
+                  <Link to={`/blog/${relatedPost.id}`} className="blog-card-link">
+                    Read More →
                   </Link>
-                </h3>
-                <Link 
-                  to={`/blog/${relatedPost.id}`}
-                  className="btn"
-                  style={{ fontSize: '0.9rem', padding: '8px 16px' }}
-                >
-                  Read More
-                </Link>
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Navigation */}
-      <div style={{ 
-        marginTop: '3rem', 
-        padding: '2rem 0',
-        borderTop: '2px solid #eee',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
-        <button 
-          onClick={() => navigate(-1)}
-          className="btn btn-outline"
-        >
+      {/* Navigation Footer */}
+      <div className="blog-article-navigation">
+        <button onClick={() => navigate(-1)} className="back-btn-modern">
           ← Go Back
         </button>
-        <Link to="/blog" className="btn">View All Posts</Link>
+        <Link to="/blog" className="all-posts-btn-modern">
+          View All Posts
+        </Link>
       </div>
     </div>
   );

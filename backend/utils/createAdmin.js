@@ -19,15 +19,11 @@ const createAdminUser = async () => {
       role: 'admin'
     };
 
-    // Hash password
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(defaultAdmin.password, saltRounds);
-
     // Create admin user
     const adminUser = new User({
       username: defaultAdmin.username,
       email: defaultAdmin.email,
-      password: hashedPassword,
+      password: defaultAdmin.password, // Schema pre-save hook handles hashing automatically
       role: defaultAdmin.role
     });
 

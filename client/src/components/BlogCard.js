@@ -7,76 +7,52 @@ const BlogCard = ({ post }) => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  const truncateContent = (content, maxLength = 150) => {
-    if (content.length <= maxLength) return content;
-    return content.substr(0, maxLength) + '...';
+  const truncateContent = (content, maxLength = 120) => {
+    if (!content) return '';
+    // Strip HTML tags for clean text excerpt
+    const plainText = content.replace(/<[^>]*>/g, '');
+    if (plainText.length <= maxLength) return plainText;
+    return plainText.substring(0, maxLength) + '...';
   };
 
+  const imageUrl = post.featuredImage?.url || (typeof post.featuredImage === 'string' ? post.featuredImage : null);
+
   return (
-    <article className="card">
-      <div style={{ marginBottom: '1rem' }}>
-        <span style={{
-          fontSize: '0.9rem',
-          color: '#666',
-          background: '#f8f9fa',
-          padding: '4px 8px',
-          borderRadius: '4px'
-        }}>
-          {post.category}
-        </span>
+    <article className={`blog-card-modern ${imageUrl ? 'has-image' : ''}`}>
+      {imageUrl && (
+        <div className="blog-card-image">
+          <img src={imageUrl} alt={post.featuredImage?.alt || post.title} onError={(e) => e.target.style.display = 'none'} />
+        </div>
+      )}
+      
+      <div className="blog-card-content">
+        <div className="blog-card-meta">
+          <span className="blog-card-category">{post.category}</span>
+          <span className="blog-card-date">{formatDate(post.createdAt || post.date)}</span>
+        </div>
+        
+        <h3 className="blog-card-title">
+          <Link to={`/blog/${post._id || post.id}`}>
+            {post.title}
+          </Link>
+        </h3>
+        
+        <p className="blog-card-excerpt">
+          {truncateContent(post.content || post.excerpt)}
+        </p>
+        
+        <div className="blog-card-footer">
+          <div className="blog-card-tags">
+            {post.tags && post.tags.slice(0, 3).map(tag => (
+              <span key={tag} className="blog-card-tag">#{tag}</span>
+            ))}
+          </div>
+          
+          <Link to={`/blog/${post._id || post.id}`} className="blog-card-link">
+            Read Article →
+          </Link>
+        </div>
       </div>
-      
-      <h3 style={{ marginBottom: '0.5rem' }}>
-        <Link 
-          to={`/blog/${post._id || post.id}`}
-          style={{ 
-            textDecoration: 'none', 
-            color: '#2c3e50',
-            transition: 'color 0.3s ease'
-          }}
-          onMouseOver={(e) => e.target.style.color = '#3498db'}
-          onMouseOut={(e) => e.target.style.color = '#2c3e50'}
-        >
-          {post.title}
-        </Link>
-      </h3>
-      
-      <p style={{ 
-        color: '#666', 
-        fontSize: '0.9rem', 
-        marginBottom: '1rem' 
-      }}>
-        {formatDate(post.createdAt || post.date)}
-      </p>
-      
-      <p style={{ marginBottom: '1.5rem' }}>
-        {truncateContent(post.content || post.excerpt)}
-      </p>
-      
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
-        {post.tags && post.tags.map(tag => (
-          <span 
-            key={tag}
-            style={{
-              fontSize: '0.8rem',
-              background: '#e3f2fd',
-              color: '#1976d2',
-              padding: '2px 6px',
-              borderRadius: '12px'
-            }}
-          >
-            #{tag}
-          </span>
-        ))}
-      </div>
-      
-      <Link 
-        to={`/blog/${post._id || post.id}`}
-        className="btn"
-        style={{ fontSize: '0.9rem', padding: '8px 16px' }}
-      >
-        Read More
-      </Link>
     </article>
   );
 };

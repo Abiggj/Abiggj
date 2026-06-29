@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaServer, FaNetworkWired, FaDatabase } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaServer, FaNetworkWired, FaDatabase, FaPaw, FaAward, FaExternalLinkAlt, FaTerminal, FaCode, FaCloud, FaBrain, FaCogs, FaPenNib, FaBox } from 'react-icons/fa';
 import { SiAmazonwebservices, SiGooglecloud, SiDocker, SiKubernetes, SiPython, SiGoland, SiJavascript, SiPostgresql, SiMongodb, SiTensorflow, SiJira } from 'react-icons/si';
 import { VscAzure } from "react-icons/vsc";
+
+const heroRoles = [
+  { text: 'DevOps Engineer', icon: <FaTerminal /> },
+  { text: 'Software Developer', icon: <FaCode /> },
+  { text: 'Cloud Practitioner', icon: <FaCloud /> },
+  { text: 'AI & ML Enthusiast', icon: <FaBrain /> },
+  { text: 'Site Reliability Engineer', icon: <FaServer /> },
+  { text: 'Automation Engineer', icon: <FaCogs /> },
+  { text: 'Open Source Contributor', icon: <FaGithub /> },
+  { text: 'Tech Content Writer', icon: <FaPenNib /> },
+  { text: 'Containerization Specialist', icon: <FaBox /> },
+  { text: 'Golang Developer', icon: <FaTerminal /> }
+];
+
+const phrases = heroRoles.map(role => role.text);
 
 const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [typedText, setTypedText] = useState('');
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  
-  const phrases = [
-    'DevOps Engineer',
-    'Software Developer',
-    'Cloud Practitioner',
-    'AI & ML Enthusiast',
-    'Site Reliability Engineer',
-    'Automation Engineer',
-    'Open Source Contributor',
-    'Tech Content Writer',
-    'Containerization Specialist',
-    'Golang Developer'
-  ];
 
   useEffect(() => {
     setIsVisible(true);
@@ -72,6 +75,23 @@ const Home = () => {
     { icon: <SiJira />, name: 'Jira', color: '#0052CC' }
   ];
 
+  const publications = [
+    {
+      title: 'Distance Analysis and Dimensionality Reduction using PCA on Brain Tumor MRI Scans',
+      venue: 'EAI MLADA',
+      date: 'Nov 2023',
+      link: 'https://publications.eai.eu/index.php/phat/article/view/5632',
+      tags: ['PCA', 'MRI Scans', 'Brain Tumor', 'Dimensionality Reduction']
+    },
+    {
+      title: 'Comparison of Clustering Algorithms for Segregating Planar Sections of Brain MRIs',
+      venue: 'MIT-SocICon',
+      date: 'Apr 2024',
+      link: 'https://ieeexplore.ieee.org/document/10575146',
+      tags: ['Clustering', 'MRI Sections', 'Algorithms Comparison', 'Image Segmentation']
+    }
+  ];
+
   return (
     <div className="home">
       {/* Hero Section */}
@@ -90,9 +110,9 @@ const Home = () => {
             </p>
 
             <div className="hero-buttons">
-              <a href="/contact" className="btn btn-primary">
+              <Link to="/contact" className="btn btn-primary">
                 <FaEnvelope /> Get In Touch
-              </a>
+              </Link>
               <a href="/Aniket_Jhariya_Resume.pdf" className="btn btn-secondary" download>
                 <FaDownload /> Download CV
               </a>
@@ -114,81 +134,128 @@ const Home = () => {
           <div className="hero-image">
             <div className="floating-card">
               <div className="profile-placeholder">
-                <div className="profile-icon">
-                  <FaServer />
+                <div key={currentPhraseIndex} className="profile-icon animate-icon">
+                  {heroRoles[currentPhraseIndex].icon}
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Scroll Down Indicator */}
+        <a href="#skills" className="scroll-down">
+          <span>Scroll Down</span>
+          <div className="mouse">
+            <div className="wheel"></div>
+          </div>
+        </a>
       </section>
 
       {/* Skills Section */}
-      <section className="skills-section">
-        <h3 className="section-title">Tech Stack</h3>
-        <div className="skills-grid-home">
-          {skills.map((skill, index) => (
-            <div 
-              key={skill.name} 
-              className="skill-card"
-              style={{ animationDelay: `${index * 0.05}s` }}
-            >
-              <div className="skill-icon" style={{ color: skill.color }}>
-                {skill.icon}
+      <section id="skills" className="skills-section">
+        <div className="home-container">
+          <h3 className="section-title">Tech Stack</h3>
+          <div className="skills-grid-home">
+            {skills.map((skill, index) => (
+              <div 
+                key={skill.name} 
+                className="skill-card"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                <div className="skill-icon" style={{ color: skill.color }}>
+                  {skill.icon}
+                </div>
+                <span className="skill-name">{skill.name}</span>
               </div>
-              <span className="skill-name">{skill.name}</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Projects Section */}
       <section className="projects-preview">
-        <h3 className="section-title"> Professional Projects</h3>
-        <div className="projects-grid">
-          <div className="project-card">
-            <div className="project-icon">
-              <FaNetworkWired />
-            </div>
-            <h4>CandidHR</h4>
-            <p>AI-powered recruitment platform. Deployed using ECS Fargate and CI/CD automation. Managed Dockerized backend and frontend, including DB migration from MySQL to PostgreSQL.</p>
-            <div className="project-tech">
-              <span>Django</span>
-              <span>React</span>
-              <span>AWS</span>
-              <span>PostgreSQL</span>
-            </div>
-          </div>
+        <div className="home-container">
+          <h3 className="section-title">Featured Projects</h3>
+          <div className="home-projects-grid">
+            <Link to="/projects" className="home-project-card">
+              <div className="home-project-icon">
+                <FaNetworkWired />
+              </div>
+              <h4>CandidHR</h4>
+              <p>AI-powered recruitment platform. Deployed using ECS Fargate and CI/CD automation. Managed Dockerized backend and frontend, including DB migration from MySQL to PostgreSQL.</p>
+              <div className="home-project-tech">
+                <span>Django</span>
+                <span>React</span>
+                <span>AWS</span>
+                <span>PostgreSQL</span>
+              </div>
+            </Link>
 
-          <div className="project-card">
-            <div className="project-icon">
-              <FaDatabase />
-            </div>
-            <h4>BlissIQ</h4>
-            <p>EduTech platform for regional language learners. Focused on secure RDS connectivity, ECS automation and scalable VPC setup using AWS tools and CodeBuild pipelines.</p>
-            <div className="project-tech">
-              <span>AWS</span>
-              <span>Docker</span>
-              <span>VPC</span>
-              <span>CI/CD</span>
-            </div>
+            <Link to="/projects" className="home-project-card">
+              <div className="home-project-icon">
+                <FaDatabase />
+              </div>
+              <h4>BlissIQ</h4>
+              <p>EduTech platform for regional language learners. Focused on secure RDS connectivity, ECS automation and scalable VPC setup using AWS tools and CodeBuild pipelines.</p>
+              <div className="home-project-tech">
+                <span>AWS</span>
+                <span>Docker</span>
+                <span>VPC</span>
+                <span>CI/CD</span>
+              </div>
+            </Link>
+
+            <Link to="/projects" className="home-project-card">
+              <div className="home-project-icon">
+                <FaPaw />
+              </div>
+              <h4>Pawwp</h4>
+              <p>Social media platform for pets featuring a Go backend (gorilla/mux, MongoDB, Google Drive) and a React Native mobile application, integrated with a predictive GAN pipeline.</p>
+              <div className="home-project-tech">
+                <span>Go</span>
+                <span>React Native</span>
+                <span>MongoDB</span>
+                <span>GAN</span>
+              </div>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Publications Section */}
       <section className="publications-section">
-        <h3 className="section-title">Publications</h3>
-        <ul className="publication-list">
-          <li>
-            <strong>Distance Analysis and Dimensionality Reduction using PCA on Brain Tumor MRI Scans</strong><br />
-            <a href="https://publications.eai.eu/index.php/phat/article/view/5632" target="_blank" rel="noreferrer">EAI MLADA, Nov 2023</a>
-          </li>
-          <li>
-            <strong>Comparison of Clustering Algorithms for Segregating Planar Sections of Brain MRIs</strong><br />
-            <a href="https://ieeexplore.ieee.org/document/10575146" target="_blank" rel="noreferrer">MIT-SocICon, Apr 2024</a>
-          </li>
-        </ul>
+        <div className="home-container">
+          <h3 className="section-title">Publications</h3>
+          <div className="publications-grid-modern">
+            {publications.map((publication, index) => (
+              <a 
+                key={index} 
+                href={publication.link} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="publication-card-modern"
+              >
+                <div className="publication-header-modern">
+                  <span className="pub-badge-date">{publication.date}</span>
+                  <span className="pub-badge-venue">{publication.venue}</span>
+                </div>
+                
+                <h4 className="pub-title-modern">{publication.title}</h4>
+                
+                <div className="pub-tags">
+                  {publication.tags.map((tag, i) => (
+                    <span key={i} className="pub-tag">{tag}</span>
+                  ))}
+                </div>
+                
+                <div className="pub-footer-modern">
+                  <span className="pub-link-text">Read Publication</span>
+                  <FaExternalLinkAlt className="pub-link-icon" />
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
       </section>
     </div>
   );

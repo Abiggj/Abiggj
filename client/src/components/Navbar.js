@@ -76,7 +76,7 @@ const Navbar = () => {
               <span>Contact</span>
             </Link>
           </li>
-          {isAuthenticated() ? (
+          {isAuthenticated() && (
             <>
               {isAdmin() && (
                 <li>
@@ -91,27 +91,6 @@ const Navbar = () => {
               )}
               <li>
                 <Logout />
-              </li>
-            </>
-          ) : (
-            <>
-              <li>
-                <Link
-                  to="/login"
-                  className={location.pathname === '/login' ? 'active' : ''}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <span>Login</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/register"
-                  className={location.pathname === '/register' ? 'active' : ''}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <span>Register</span>
-                </Link>
               </li>
             </>
           )}
