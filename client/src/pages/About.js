@@ -108,7 +108,7 @@ const About = () => {
         <div className="hero-content">
           <div className="profile-section">
             <div className="profile-image">
-              <FaCode className="profile-icon" />
+              <img src="/PFP.jpg" alt="Aniket Jhariya" className="profile-avatar" />
             </div>
             <div className="profile-info">
               <h1>Aniket Jhariya</h1>

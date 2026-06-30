@@ -131,10 +131,11 @@ const Home = () => {
 
           <div className="hero-image">
             <div className="floating-card">
-              <div className="profile-placeholder">
-                <div key={currentPhraseIndex} className="profile-icon animate-icon">
-                  {heroRoles[currentPhraseIndex].icon}
-                </div>
+              <div className="profile-container-home">
+                <img src="/PFP.jpg" alt="Aniket Jhariya" className="profile-pfp-home" />
+              </div>
+              <div key={currentPhraseIndex} className="role-icon-badge animate-icon">
+                {heroRoles[currentPhraseIndex].icon}
               </div>
             </div>
           </div>

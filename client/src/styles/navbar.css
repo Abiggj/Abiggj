@@ -19,17 +19,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 70px;
+  height: 80px;
 }
 
 .logo {
   text-decoration: none;
   color: white;
-  font-weight: 700;
-  font-size: 24px;
   display: flex;
-  flex-direction: column;
-  line-height: 1.2;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
   transition: transform 0.3s ease;
 }
 
@@ -37,13 +36,25 @@
   transform: scale(1.05);
 }
 
+.logo-img {
+  height: 66px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logo-text-group {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
 .logo-text {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
 }
 
 .logo-subtitle {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 400;
   opacity: 0.8;
   margin-top: -2px;
@@ -131,10 +142,10 @@
 
   .nav-links {
     position: fixed;
-    top: 70px;
+    top: 80px;
     right: -100%;
     width: 100%;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 80px);
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     flex-direction: column;
     justify-content: flex-start;
@@ -229,4 +240,27 @@
 
 .nav-links a.active {
   animation: pulse 2s infinite;
+}
+
+@media screen and (max-width: 480px) {
+  .logo-text {
+    font-size: 16px;
+  }
+  
+  .logo-subtitle {
+    font-size: 10px;
+  }
+  
+  .logo-img {
+    height: 50px;
+  }
+  
+  .nav-container {
+    height: 70px;
+  }
+  
+  .nav-links {
+    top: 70px;
+    height: calc(100vh - 70px);
+  }
 }

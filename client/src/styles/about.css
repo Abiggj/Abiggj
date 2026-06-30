@@ -1,6 +1,6 @@
 .about-page {
   padding-top: 0;
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 80px);
 }
 
 /* Hero Section */
@@ -32,6 +32,14 @@
   justify-content: center;
   backdrop-filter: blur(10px);
   border: 3px solid rgba(255,255,255,0.2);
+  overflow: hidden;
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .profile-icon {
@@ -464,5 +472,57 @@
   
   .section-title {
     font-size: 1.5rem;
+  }
+
+  /* Timeline mobile refactor */
+  .timeline-container::before {
+    display: none !important;
+  }
+  
+  .timeline-node {
+    display: none !important;
+  }
+  
+  .timeline-item {
+    padding-left: 0 !important;
+  }
+  
+  .timeline-content {
+    padding: 1.25rem !important;
+    border-radius: 16px !important;
+  }
+  
+  .timeline-content h3 {
+    font-size: 1.25rem !important;
+  }
+
+  .timeline-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  /* Education card padding */
+  .education-card-detailed {
+    padding: 1.25rem !important;
+    border-radius: 16px !important;
+  }
+
+  .education-details-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  /* Skill Category Cards */
+  .skill-category-card {
+    padding: 1.2rem !important;
+  }
+
+  .experience-projects-list {
+    grid-template-columns: 1fr !important;
+  }
+
+  .skills-grid-compact {
+    grid-template-columns: 1fr !important;
   }
 }

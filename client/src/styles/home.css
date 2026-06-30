@@ -1,7 +1,7 @@
 /* Home Page Styles */
 .home {
   padding-top: 0; /* Handled globally by main-content */
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 80px);
 }
 
 .home-container {
@@ -262,8 +262,10 @@
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255,255,255,0.2);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 40px;
   justify-content: center;
+  box-sizing: border-box;
   animation: float 6s ease-in-out infinite;
   position: relative;
 }
@@ -288,6 +290,40 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.profile-container-home {
+  position: relative;
+  width: 220px;
+  height: 220px;
+}
+
+.profile-pfp-home {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.role-icon-badge {
+  position: absolute;
+  bottom: 60px;
+  right: 15px;
+  width: 120px;
+  height: 120px;
+  background: #feca57;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f172a;
+  font-size: 3.6rem;
+  border: 4px solid #0f172a;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  z-index: 10;
 }
 
 .profile-icon {
@@ -626,8 +662,29 @@
   }
   
   .floating-card {
-    width: 250px;
-    height: 300px;
+    width: 240px;
+    height: 290px;
+    padding-top: 25px;
+    box-sizing: border-box;
+    align-items: flex-start;
+  }
+  
+  .profile-container-home {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .profile-pfp-home {
+    border-width: 3px;
+  }
+  
+  .role-icon-badge {
+    width: 80px;
+    height: 80px;
+    font-size: 2.4rem;
+    bottom: 35px;
+    right: 10px;
+    border-width: 3px;
   }
   
   .projects-grid {
@@ -656,27 +713,6 @@
 .publications-section {
   padding: 2.5rem 0;
   background: #f8f9fa;
-}
-
-.publications-section .section-title {
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 3rem;
-  position: relative;
-}
-
-.publications-section .section-title::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 4px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-  border-radius: 2px;
 }
 
 /* Publications styles moved to global.css */

@@ -322,7 +322,7 @@ const Projects = () => {
 
       {/* GitHub Profile Section */}
       <section className="github-section">
-        <div className="container">
+        <div className="github-container">
           <div className="github-card">
             <FaGithub className="github-icon" />
             <div className="github-content">
