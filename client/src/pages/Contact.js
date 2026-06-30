@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaPaperPlane, FaUser, FaComment } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaPaperPlane } from 'react-icons/fa';
 import '../styles/Contact.css'; 
 
 const Contact = () => {
@@ -33,50 +33,6 @@ const Contact = () => {
       [e.target.name]: e.target.value
     });
   };
-
-  const contactInfo = [
-    {
-      icon: <FaEnvelope />,
-      label: 'Email',
-      value: 'aniket.jhariya@gmail.com',
-      link: 'mailto:aniket.jhariya@gmail.com',
-      color: '#ea4335'
-    },
-    {
-      icon: <FaPhone />,
-      label: 'Phone',
-      value: '+91 881 7564 165',
-      link: 'tel:+918817564165',
-      color: '#34a853'
-    },
-    {
-      icon: <FaMapMarkerAlt />,
-      label: 'Location',
-      value: 'Pune, Maharashtra, India',
-      link: 'https://maps.google.com/?q=Pune,Maharashtra,India',
-      color: '#fbbc05'
-    },
-    {
-      icon: <FaLinkedin />,
-      label: 'LinkedIn',
-      value: 'linkedin.com/in/aniket-jhariya',
-      link: 'https://linkedin.com/in/aniket-jhariya',
-      color: '#0077b5'
-    },
-    {
-      icon: <FaGithub />,
-      label: 'GitHub',
-      value: 'github.com/Abiggj',
-      link: 'https://github.com/Abiggj',
-      color: '#333'
-    }
-  ];
-
-  const workingHours = [
-    { day: 'Monday - Friday', hours: '9:00 AM - 6:00 PM' },
-    { day: 'Saturday', hours: '10:00 AM - 4:00 PM' },
-    { day: 'Sunday', hours: 'By Appointment' }
-  ];
 
   return (
     <div className="contact-page">

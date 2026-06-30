@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaServer, FaNetworkWired, FaDatabase, FaPaw, FaAward, FaExternalLinkAlt, FaTerminal, FaCode, FaCloud, FaBrain, FaCogs, FaPenNib, FaBox } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaServer, FaNetworkWired, FaDatabase, FaPaw, FaExternalLinkAlt, FaTerminal, FaCode, FaCloud, FaBrain, FaCogs, FaPenNib, FaBox } from 'react-icons/fa';
 import { SiAmazonwebservices, SiGooglecloud, SiDocker, SiKubernetes, SiPython, SiGoland, SiJavascript, SiPostgresql, SiMongodb, SiTensorflow, SiJira } from 'react-icons/si';
 import { VscAzure } from "react-icons/vsc";
 
@@ -33,7 +33,6 @@ const Home = () => {
     const typeSpeed = 65;
     const deleteSpeed = 30;
     const pauseTime = 2000;
-    const deleteDelay = 600;
 
     const timeout = setTimeout(() => {
       const currentPhrase = phrases[currentPhraseIndex];
@@ -58,7 +57,7 @@ const Home = () => {
     }, isDeleting ? deleteSpeed : typeSpeed);
 
     return () => clearTimeout(timeout);
-  }, [typedText, currentPhraseIndex, isDeleting, phrases]);
+  }, [typedText, currentPhraseIndex, isDeleting]);
 
   const skills = [
     { icon: <SiAmazonwebservices />, name: 'AWS', color: '#FF9900' },

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const mockRelatedPosts = [];
+
 const BlogPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -10,33 +12,31 @@ const BlogPost = () => {
   const [error, setError] = useState(null);
   const [relatedPosts, setRelatedPosts] = useState([]);
 
-  const mockRelatedPosts = [];
-
   useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${process.env.REACT_APP_API}/api/blog/posts/${id}`);
+        setPost(response.data.post);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch blog post');
+        setLoading(false);
+        console.error('Error fetching post:', err);
+      }
+    };
+
+    const fetchRelatedPosts = async () => {
+      try {
+        setRelatedPosts(mockRelatedPosts);
+      } catch (err) {
+        console.error('Error fetching related posts:', err);
+      }
+    };
+
     fetchPost();
     fetchRelatedPosts();
   }, [id]);
-
-  const fetchPost = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`${process.env.REACT_APP_API}/api/blog/posts/${id}`);
-      setPost(response.data.post);
-      setLoading(false);
-    } catch (err) {
-      setError('Failed to fetch blog post');
-      setLoading(false);
-      console.error('Error fetching post:', err);
-    }
-  };
-
-  const fetchRelatedPosts = async () => {
-    try {
-      setRelatedPosts(mockRelatedPosts);
-    } catch (err) {
-      console.error('Error fetching related posts:', err);
-    }
-  };
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
