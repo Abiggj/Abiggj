@@ -30,13 +30,12 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const typeSpeed = 65;
-    const deleteSpeed = 30;
-    const pauseTime = 2000;
+    const currentPhrase = phrases[currentPhraseIndex];
+    const typeSpeed = currentPhrase.length ? 1000 / currentPhrase.length : 40;
+    const deleteSpeed = 15;
+    const pauseTime = 1200;
 
     const timeout = setTimeout(() => {
-      const currentPhrase = phrases[currentPhraseIndex];
-      
       if (isDeleting) {
         // Backspacing/deleting
         setTypedText(currentPhrase.substring(0, typedText.length - 1));
