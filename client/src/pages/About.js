@@ -105,25 +105,24 @@ const About = () => {
     <div className="about-page">
       {/* Hero Section */}
       <section className="about-hero">
-        <div className="hero-content">
-          <div className="profile-section">
-            <div className="profile-image">
-              <img src="/PFP.jpg" alt="Aniket Jhariya" className="profile-avatar" />
-            </div>
-            <div className="profile-info">
+        <div className="profile-image-container">
+          <img src="/PFP.jpg" alt="Aniket Jhariya" className="profile-avatar" />
+        </div>
+        <div className="hero-text-content">
+          <div className="hero-details-row">
+            <div className="hero-info-col">
               <h1>Aniket Jhariya</h1>
               <h2>DevOps Engineer</h2>
               <p className="location">• Pune, Maharashtra <br/>• aniket.jhariya@gmail.com <br/> • +91 881 7564 165</p>
             </div>
-          </div>
-          
-          <div className="profile-description">
-            <p>
-              Passionate and hands-on DevOps Engineer with internship experience at Diacto Technologies, 
-              where I contributed to CI/CD pipelines, cloud infrastructure (AWS), and deployment automation. 
-              With a strong foundation in Computer Science, AWS, Docker, and Kubernetes, I aim to support 
-              agile teams in delivering scalable and resilient systems.
-            </p>
+            <div className="hero-desc-col">
+              <p>
+                Passionate and hands-on DevOps Engineer with internship experience at Diacto Technologies, 
+                where I contributed to CI/CD pipelines, cloud infrastructure (AWS), and deployment automation. 
+                With a strong foundation in Computer Science, AWS, Docker, and Kubernetes, I aim to support 
+                agile teams in delivering scalable and resilient systems.
+              </p>
+            </div>
           </div>
         </div>
       </section>
