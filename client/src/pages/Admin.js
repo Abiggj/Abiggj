@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
 const Admin = () => {
-  const { token, user, logout } = useAuth();
+  const { token, user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
