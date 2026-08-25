@@ -17,8 +17,36 @@ const BlogPost = () => {
       try {
         setLoading(true);
         const response = await axios.get(`${process.env.REACT_APP_API}/api/blog/posts/${id}`);
-        setPost(response.data.post);
+        const postData = response.data.post;
+        setPost(postData);
         setLoading(false);
+
+        if (postData) {
+          document.title = `${postData.title} | Abiggj`;
+          
+          // Update meta description
+          const descContent = postData.excerpt || postData.content?.replace(/<[^>]*>/g, '').substring(0, 160) || '';
+          let metaDesc = document.querySelector('meta[name="description"]');
+          if (metaDesc) metaDesc.setAttribute('content', descContent);
+
+          // Update Open Graph tags in DOM
+          const updateMeta = (prop, content) => {
+            if (!content) return;
+            let el = document.querySelector(`meta[property="${prop}"]`);
+            if (!el) {
+              el = document.createElement('meta');
+              el.setAttribute('property', prop);
+              document.head.appendChild(el);
+            }
+            el.setAttribute('content', content);
+          };
+
+          const postImg = postData.featuredImage?.url || `${window.location.origin}/PFP.jpg`;
+          updateMeta('og:title', `${postData.title} | Abiggj`);
+          updateMeta('og:description', descContent);
+          updateMeta('og:image', postImg);
+          updateMeta('og:url', window.location.href);
+        }
       } catch (err) {
         setError('Failed to fetch blog post');
         setLoading(false);
@@ -36,6 +64,10 @@ const BlogPost = () => {
 
     fetchPost();
     fetchRelatedPosts();
+
+    return () => {
+      document.title = 'Aniket Jhariya | Portfolio & Blog';
+    };
   }, [id]);
 
   const formatDate = (dateString) => {

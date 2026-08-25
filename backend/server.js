@@ -85,6 +85,11 @@ app.get('/admin/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin-panel', 'index.html'));
 });
 
+// Blog Open Graph / Crawler Route for direct requests
+const { getPostOgMeta } = require('./controllers/blogController');
+app.get('/blog/:id', getPostOgMeta);
+app.get('/blog/slug/:slug', getPostOgMeta);
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ 

@@ -1,6 +1,21 @@
+map $http_user_agent $is_crawler {
+    default 0;
+    ~*(LinkedInBot|Twitterbot|facebookexternalhit|WhatsApp|Slackbot|Discordbot|TelegramBot|Pinterest|Googlebot|bingbot|Baiduspider|yandex) 1;
+}
+
 server {
     listen ${PORT};
     server_name localhost;
+
+    # Proxy crawlers to backend Open Graph endpoint, serve SPA to humans
+    location ~ ^/blog/(.+) {
+        if ($is_crawler) {
+            proxy_pass ${BACKEND_URL}/api/blog/og/$1;
+            break;
+        }
+        root /usr/share/nginx/html;
+        try_files $uri $uri/ /index.html;
+    }
 
     location / {
         root /usr/share/nginx/html;

@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const BlogPost = require('../models/BlogPost');
 const { sanitizeHtml } = require('../utils/sanitize');
 
@@ -426,6 +427,173 @@ const likePost = async (req, res) => {
       message: 'Server error liking post'
     });
   }
+// Generate Dynamic Open Graph & Twitter Cards HTML for scrapers / crawlers (LinkedIn, Twitter, Facebook, etc.)
+const getPostOgMeta = async (req, res) => {
+  try {
+    const { id, slug } = req.params;
+    const identifier = id || slug;
+    
+    let post = null;
+    if (identifier) {
+      if (mongoose.Types.ObjectId.isValid(identifier)) {
+        post = await BlogPost.findById(identifier).populate('author', 'username');
+      }
+      if (!post) {
+        post = await BlogPost.findOne({ slug: identifier, status: 'published' }).populate('author', 'username');
+      }
+      if (!post) {
+        post = await BlogPost.findOne({ slug: identifier }).populate('author', 'username');
+      }
+    }
+
+    const frontendUrl = process.env.FRONTEND_URL || 'https://abiggj.vercel.app';
+    const defaultImage = `${frontendUrl}/PFP.jpg`;
+
+    // Helper to escape HTML entities for meta tag attributes
+    const escapeHtml = (str) => {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    };
+
+    if (!post) {
+      return res.status(404).send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Blog Post Not Found | Abiggj</title>
+  <meta property="og:title" content="Blog Post Not Found | Abiggj" />
+  <meta property="og:description" content="Explore articles and engineering projects on Abiggj Blog." />
+  <meta property="og:image" content="${defaultImage}" />
+  <meta http-equiv="refresh" content="0;url=${frontendUrl}/blog" />
+</head>
+<body>
+  <p>Post not found. Redirecting to <a href="${frontendUrl}/blog">Blog</a>...</p>
+  <script>window.location.replace("${frontendUrl}/blog");</script>
+</body>
+</html>`);
+    }
+
+    const postTitle = post.seo?.metaTitle || post.title || 'Blog Post | Abiggj';
+    
+    // Generate clean excerpt if not explicitly set
+    let postDescription = post.seo?.metaDescription || post.excerpt;
+    if (!postDescription && post.content) {
+      postDescription = post.content
+        .replace(/<[^>]*>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (postDescription.length > 160) {
+        postDescription = postDescription.substring(0, 157) + '...';
+      }
+    }
+    if (!postDescription) {
+      postDescription = `Read "${postTitle}" by ${post.author?.username || 'Aniket Jhariya'} on Abiggj Blog.`;
+    }
+
+    // Dynamic Image Selection & Fallback Handling
+    let imageUrl = post.featuredImage?.url;
+    const hasImage = Boolean(imageUrl && typeof imageUrl === 'string' && imageUrl.trim().length > 0);
+    
+    if (hasImage) {
+      imageUrl = imageUrl.trim();
+      // Ensure absolute URL
+      if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+        imageUrl = `${frontendUrl}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+      }
+    } else {
+      imageUrl = defaultImage;
+    }
+
+    const cardType = hasImage ? 'summary_large_image' : 'summary_large_image';
+    const canonicalSlug = post.slug || post._id;
+    const postUrl = `${frontendUrl}/blog/${canonicalSlug}`;
+    const authorName = post.author?.username || 'Aniket Jhariya';
+    const publishedIso = new Date(post.publishedAt || post.createdAt || Date.now()).toISOString();
+    const tags = Array.isArray(post.tags) ? post.tags : [];
+
+    const safeTitle = escapeHtml(postTitle);
+    const safeDesc = escapeHtml(postDescription);
+    const safeUrl = escapeHtml(postUrl);
+    const safeImage = escapeHtml(imageUrl);
+    const safeAuthor = escapeHtml(authorName);
+    const safeCategory = escapeHtml(post.category || 'Tech');
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>${safeTitle} | Abiggj</title>
+  <meta name="description" content="${safeDesc}" />
+  <meta name="author" content="${safeAuthor}" />
+  <link rel="canonical" href="${safeUrl}" />
+
+  <!-- Open Graph / LinkedIn / Facebook / WhatsApp -->
+  <meta property="og:site_name" content="Abiggj" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="${safeUrl}" />
+  <meta property="og:title" content="${safeTitle}" />
+  <meta property="og:description" content="${safeDesc}" />
+  <meta property="og:image" content="${safeImage}" />
+  <meta property="og:image:secure_url" content="${safeImage}" />
+  <meta property="og:image:alt" content="${safeTitle}" />
+  <meta property="article:published_time" content="${publishedIso}" />
+  <meta property="article:author" content="${safeAuthor}" />
+  <meta property="article:section" content="${safeCategory}" />
+  ${tags.map(t => `<meta property="article:tag" content="${escapeHtml(t)}" />`).join('\n  ')}
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="${cardType}" />
+  <meta name="twitter:url" content="${safeUrl}" />
+  <meta name="twitter:title" content="${safeTitle}" />
+  <meta name="twitter:description" content="${safeDesc}" />
+  <meta name="twitter:image" content="${safeImage}" />
+
+  <!-- Schema.org Article Structured Data for Crawlers & Search Engines -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": ${JSON.stringify(postTitle)},
+    "description": ${JSON.stringify(postDescription)},
+    "image": [${JSON.stringify(imageUrl)}],
+    "datePublished": ${JSON.stringify(publishedIso)},
+    "author": {
+      "@type": "Person",
+      "name": ${JSON.stringify(authorName)}
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Aniket Jhariya"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": ${JSON.stringify(postUrl)}
+    }
+  }
+  </script>
+
+  <!-- Automatic redirect for browser users -->
+  <meta http-equiv="refresh" content="0;url=${safeUrl}" />
+</head>
+<body>
+  <p>Redirecting to <a href="${safeUrl}">${safeTitle}</a>...</p>
+  <script>window.location.replace("${safeUrl}");</script>
+</body>
+</html>`;
+
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=600');
+    return res.status(200).send(html);
+  } catch (error) {
+    console.error('OG Meta generation error:', error);
+    res.status(500).send('Error generating Open Graph preview');
+  }
 };
 
 module.exports = {
@@ -438,5 +606,6 @@ module.exports = {
   deletePost,
   getCategories,
   getTags,
-  likePost
+  likePost,
+  getPostOgMeta
 };

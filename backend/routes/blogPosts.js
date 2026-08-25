@@ -10,7 +10,8 @@ const {
   deletePost,
   getCategories,
   getTags,
-  likePost
+  likePost,
+  getPostOgMeta
 } = require('../controllers/blogController');
 const { auth } = require('../middleware/auth');
 const { admin } = require('../middleware/admin');
@@ -18,10 +19,11 @@ const { admin } = require('../middleware/admin');
 // Public routes
 router.get('/', getAllPosts);
 router.get('/categories', getCategories);
-router.get('/posts/:id', getPostById);
 router.get('/tags', getTags);
-router.get('/posts/:id', getPostById),
+router.get('/posts/:id', getPostById);
 router.get('/slug/:slug', getPostBySlug);
+router.get('/og/:id', getPostOgMeta);
+router.get('/og/slug/:slug', getPostOgMeta);
 router.post('/like/:slug', likePost);
 
 // Admin routes (require authentication and admin role)
