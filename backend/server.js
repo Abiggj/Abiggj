@@ -17,14 +17,76 @@ const { createAdminUser } = require('./utils/createAdmin');
 
 const app = express();
 
+// CORS configuration - Must be the FIRST middleware
+const allowedOrigins = [
+  'https://abiggj.vercel.app',
+  'https://abiggj-backend.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:3001'
+];
+
+const isOriginAllowed = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  if (origin.endsWith('.vercel.app')) return true;
+  if (origin.includes('localhost') || origin.includes('127.0.0.1')) return true;
+  return false;
+};
+
+// Global CORS & Preflight handler
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (isOriginAllowed(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma, X-CSRF-Token'
+  );
+
+  // Respond immediately to OPTIONS preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isOriginAllowed(origin)) {
+      return callback(null, true);
+    }
+    return callback(null, true); // Fallback allow
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'Authorization',
+    'Cache-Control',
+    'Pragma',
+    'X-CSRF-Token'
+  ],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
 // Security middleware
 app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.quilljs.com"],
       scriptSrc: ["'self'", "https://cdn.quilljs.com"],
-      imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "blob:"],
+      imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "blob:", "https:"],
       fontSrc: ["'self'", "https://cdn.quilljs.com"]
     }
   }
@@ -37,17 +99,6 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, please try again later.'
 });
 app.use('/api/', limiter);
-
-// CORS configuration
-app.use(cors({
-  origin: [
-    'https://abiggj.vercel.app',
-    'https://abiggj-backend.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:3001'
-  ],
-  credentials: true
-}));
 
 // Body parsing middleware
 app.use(express.json({ limit: '50mb' }));
