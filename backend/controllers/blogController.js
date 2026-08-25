@@ -427,6 +427,8 @@ const likePost = async (req, res) => {
       message: 'Server error liking post'
     });
   }
+};
+
 // Generate Dynamic Open Graph & Twitter Cards HTML for scrapers / crawlers (LinkedIn, Twitter, Facebook, etc.)
 const getPostOgMeta = async (req, res) => {
   try {
